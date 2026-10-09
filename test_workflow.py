@@ -1,4 +1,5 @@
-from workflow import assign_ticket 
+import unittest
+from workflow import assign_ticket, update_ticket_status
 ticket_list = [
     {
         "id": 1,
@@ -31,6 +32,5 @@ ticket_list = [
         "assigned_to": "Ada"
     }
 ]
-assign_ticket(ticket_list, 1, "    ")
-print(assign_ticket(ticket_list, 1, "    "))
-print(ticket_list)
+class TestWorkflow(unittest.TestCase):
+    
