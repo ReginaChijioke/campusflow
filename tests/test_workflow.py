@@ -1,6 +1,6 @@
 import unittest
 from copy import deepcopy
-from workflow import assign_ticket, update_ticket_status
+from campusflow.workflow import assign_ticket, update_ticket_status
 ticket_list = [
     {
         "id": 1,

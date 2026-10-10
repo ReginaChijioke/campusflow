@@ -1,5 +1,5 @@
 import unittest
-from reports import get_active_queue, count_tickets_by_status, count_tickets_by_priority, generate_report
+from campusflow.reports import get_active_queue, count_tickets_by_status, count_tickets_by_priority, generate_report
 
 class TestReports(unittest.TestCase):
     def test_get_active_queue(self):
