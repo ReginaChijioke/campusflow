@@ -1,44 +1,58 @@
-import uuid
-
 # These are the official choices allowed by the rules
-VALID_CATEGORIES = {"Network", "Hardware", "Software", "Other"}
-VALID_URGENCIES = {"Low", "Medium", "High"}
+allowed_categories = {"Network", "Hardware", "Software", "Other"}
+allowed_urgency_levels = {"low", "medium", "high"}
 
+#first define a func to generate next unique ticket id
+def next_ticket_id(ticket_list):
+    highest = 0
+    for each_ticket in ticket_list:
+        ticket_id = each_ticket['id']
+        numeric_part = int(ticket_id[1:])
+        if numeric_part > highest:
+            highest = numeric_part
+    next_id = highest + 1
+    return f'T{next_id:03d}' 
 
 def calculate_priority(urgency, affected_users):         # Calculates ticket priority based on both info provided by user
-    if urgency == "High" and affected_users >= 10:
-        return "Critical"
-    elif urgency == "High" or affected_users >= 10:
-        return "High"
-    elif urgency == "Medium" or affected_users >= 3:
-        return "Medium"
-    else:
-        return "Low"
+   #ensure case normalization
+    nocase_urgency = urgency.strip().lower()
 
-def create_ticket(title, category, urgency, affected_users):
+    if nocase_urgency == "high" and affected_users >= 10:
+        return "critical"
+    elif nocase_urgency == "high" or affected_users >= 10:
+        return "high"
+    elif nocase_urgency == "medium" or affected_users >= 3:
+        return "medium"
+    else:
+        return "low"
+
+def create_ticket(existing_tickets, title, category, urgency, affected_users):
     #check user inputs before creating ticket
-    
+    nocase_category = category.strip().capitalize()
+    nocase_urgency = urgency.strip().lower()
+
     if not title or not title.strip():         # Check1: Reject empty or whitespace-only titles
         raise ValueError("Ticket title cannot be empty or whitespace-only.")
     
-    if category not in VALID_CATEGORIES:       # Check2: Reject unsupported categories
-        raise ValueError(f"Invalid category. Must be one of {VALID_CATEGORIES}")
+    if nocase_category not in allowed_categories:       # Check2: Reject unsupported categories
+        raise ValueError(f"Invalid category. Must be one of {allowed_categories}")
  
-    if urgency not in VALID_URGENCIES:          #Check3: Reject invalid urgency values
-        raise ValueError(f"Invalid urgency. Must be one of {VALID_URGENCIES}")
+    if nocase_urgency not in allowed_urgency_levels:          #Check3: Reject invalid urgency values
+        raise ValueError(f"Invalid urgency. Must be one of {allowed_urgency_levels}")
         
     if not isinstance(affected_users, int) or affected_users <= 0:
         raise ValueError("Affected users must be a positive integer greater than zero.")   
     
+    ticket_id = next_ticket_id(existing_tickets)  #to generate next idea sequentially
     priority_level = calculate_priority(urgency, affected_users)   #using the func to calc.  priority level
     
     return {                                #Assemble and return the complete 8-key dictionary contract
-        "id": str(uuid.uuid4())[:8],
+        "id": ticket_id,
         "title": title.strip(),
-        "category": category,
-        "urgency": urgency,
+        "category": nocase_category,
+        "urgency": nocase_urgency,
         "affected_users": affected_users,
         "priority": priority_level,
-        "status": "OPEN",
+        "status": "open",
         "assigned_to": None
     }
