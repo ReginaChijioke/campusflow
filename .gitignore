@@ -1,2 +1,9 @@
-__pycache__/
+<<<<<<< HEAD
 *.py[cod]
+=======
+.venv/
+__pycache__/
+*.pyc
+.env
+data/tickets.json
+>>>>>>> origin/feat/ticket-creation
